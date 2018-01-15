@@ -4,7 +4,7 @@ import os
 from loader import Configuration
 
 
-def init_db(db):
+def populate_db(db):
     """We create what we want here. We get the DB connection object.
     We need to open and to close it. It doesn't need to return anything.
     Make sure to use a transaction manager to have it correctly persisted.
@@ -30,9 +30,10 @@ with Configuration('config.json') as config:
     implicit.initialize()  # we create a new registry and make it the default
 
     # We read the zodb conf and initialize it
-    from cromlech.zodb import init_db_from_file
+    from cromlech.zodb import init_db
     with open(config['zodb']['config'], 'r') as fd:
-        db = init_db_from_file(fd, init_db)
+        db = init_db(fd.read())
+    populate_db(db)
 
     # Creating the applications and routing them
     from rutter import urlmap
